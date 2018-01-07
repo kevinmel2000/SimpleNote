@@ -2,13 +2,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/divider"
     tools:context="com.example.leos.simplenote.ui.main.DialogNoteFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/tv_dialog_note_title"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <TextView
+            android:id="@+id/tv_dialog_note_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="#fff"
+            android:padding="8dp"
+            android:text="Title" />
 
+        <TextView
+            android:id="@+id/tv_dialog_note_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_dialog_note_title"
+            android:layout_marginTop="8dp"
+            android:background="#fff"
+            android:padding="16dp"
+            android:text="it's the content of the not it's the content of the not it's the content of the not it's the content of the notit's the content of the not it's the content of the notit's the content of the not" />
+
+
+        <TextView
+            android:id="@+id/tv_dialog_note_created_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_dialog_note_content"
+            android:layout_marginTop="8dp"
+            android:background="#fff"
+            android:padding="8dp"
+            android:text="Created At 27 Desember 2019"
+            android:textSize="10sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/tv_dialog_note_modified_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_dialog_note_created_date"
+            android:layout_alignBottom="@+id/tv_dialog_note_created_date"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@+id/tv_dialog_note_created_date"
+            android:layout_toRightOf="@+id/tv_dialog_note_created_date"
+            android:background="#fff"
+            android:padding="8dp"
+            android:text="Modified At 30 Desember 2019"
+            android:textSize="10sp"
+            android:textStyle="italic" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:layout_below="@id/tv_dialog_note_modified_date">
+            <Button
+                android:id="@+id/btn_dialog_note_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent"
+                android:text="Edit" />
+            <Button
+                android:id="@+id/btn_dialog_note_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent"
+                android:text="Delete" />
+        </LinearLayout>
+    </RelativeLayout>
 </FrameLayout>

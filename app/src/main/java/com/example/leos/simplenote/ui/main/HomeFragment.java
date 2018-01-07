@@ -18,6 +18,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.leos.simplenote.R;
+import com.example.leos.simplenote.dependencyinjection.AppComponent;
+import com.example.leos.simplenote.dependencyinjection.ContextModule;
+import com.example.leos.simplenote.dependencyinjection.DaggerAppComponent;
+import com.example.leos.simplenote.dependencyinjection.RoomModule;
 import com.example.leos.simplenote.model.NoteRepository;
 import com.example.leos.simplenote.model.room.NoteDao;
 import com.example.leos.simplenote.model.room.NoteDatabase;
@@ -57,15 +61,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         return mRootView;
     }
 
+    private ViewModelProvider.Factory factory;
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (viewModel == null){
-            NoteDao noteDao = NoteDatabase.getsInstance(getContext()).noteDao();
+
+        /*if (viewModel == null){
+            NoteDatabase noteDatabase = NoteDatabase.getsInstance(getContext());
+            NoteDao noteDao = noteDatabase.noteDao();
             NoteRepository noteRepository = new NoteRepository(noteDao);
             NoteViewModelFactory viewModelFactory = new NoteViewModelFactory(noteRepository);
             viewModel= ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel.class);
+
+        }*/
+
+
+
+        if (viewModel == null){
+            AppComponent appComponent = DaggerAppComponent
+                    .builder()
+                    .contextModule(new ContextModule(getContext()))
+                    .build();
+            factory = appComponent.geViewModelFactory();
+            viewModel= ViewModelProviders.of(this, factory).get(HomeViewModel.class);
         }
+
         viewModel.getAllNote().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(@Nullable List<Note> notes) {
@@ -108,7 +129,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         Bundle args = new Bundle();
         args.putParcelable("Note", note);
 
-        DialogNoteFragment dialogNoteFragment = DialogNoteFragment.getInstance();
+        DialogNoteFragment dialogNoteFragment = new DialogNoteFragment();
         dialogNoteFragment.setArguments(args);
         dialogNoteFragment.show(
                 getChildFragmentManager(),

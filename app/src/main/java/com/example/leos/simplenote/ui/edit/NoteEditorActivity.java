@@ -56,4 +56,18 @@ public class NoteEditorActivity extends BaseActivity {
                     "Edit Note");
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
