@@ -95,7 +95,6 @@ public class DialogNoteFragment extends DialogFragment implements View.OnClickLi
 
     private void deleteNote() {
         viewModel.deleteNote(String.valueOf(note.getId()));
-        dismiss();
     }
 
     @Override
@@ -103,9 +102,11 @@ public class DialogNoteFragment extends DialogFragment implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btn_dialog_note_edit:
                 startNoteEditorActivity();
+                dismiss();
                 break;
             case R.id.btn_dialog_note_delete:
                 deleteNote();
+                dismiss();
                 break;
         }
     }
