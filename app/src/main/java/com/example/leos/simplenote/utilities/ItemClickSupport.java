@@ -9,6 +9,7 @@ import com.example.leos.simplenote.R;
 public class ItemClickSupport {
     private RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
 
     private ItemClickSupport(RecyclerView recyclerView){
         mRecyclerView = recyclerView;
@@ -22,6 +23,10 @@ public class ItemClickSupport {
                 public void onChildViewAttachedToWindow(View view) {
                     if (mOnItemClickListener != null){
                         view.setOnClickListener(mOnClickListener);
+                    }
+
+                    if (mOnItemLongClickListener != null){
+                        view.setOnLongClickListener(mOnLongClickListener);
                     }
                 }
 
@@ -38,6 +43,17 @@ public class ItemClickSupport {
                 RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(v);
                 mOnItemClickListener.onItemClicked(mRecyclerView, holder.getAdapterPosition(), v);
             }
+        }
+    };
+
+    private View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            if (mOnItemLongClickListener != null){
+                RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(v);
+                mOnItemLongClickListener.onItemLongClicked(mRecyclerView, holder.getAdapterPosition(), v);
+            }
+            return false;
         }
     };
 
@@ -60,12 +76,22 @@ public class ItemClickSupport {
         mOnItemClickListener = listener;
         return this;
     }
+
+    public ItemClickSupport setOnItemLongClickListener(OnItemLongClickListener listener){
+        mOnItemLongClickListener = listener;
+        return this;
+    }
+
     private void detach(RecyclerView view){
         view.removeOnChildAttachStateChangeListener(mAttachListnener);
         view.setTag(R.id.item_click_support, null);
     }
 
+
     public interface OnItemClickListener{
         void onItemClicked(RecyclerView recyclerView, int position, View v);
+    }
+    public interface OnItemLongClickListener{
+        void onItemLongClicked(RecyclerView recyclerView, int position, View v);
     }
 }

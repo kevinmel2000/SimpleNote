@@ -22,7 +22,7 @@ public class BaseActivity extends AppCompatActivity {
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(container, fragment, TAG)
-                .addToBackStack(null)
+                .addToBackStack(TAG)
                 .commit();
         if (titleBar != null){
             getSupportActionBar().setTitle(titleBar);

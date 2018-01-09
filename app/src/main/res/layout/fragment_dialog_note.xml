@@ -36,7 +36,7 @@
             android:layout_marginTop="8dp"
             android:background="#fff"
             android:padding="8dp"
-            android:text="Created At 27 Desember 2019"
+            android:text="Created At : --"
             android:textSize="10sp"
             android:textStyle="italic" />
 
@@ -52,7 +52,7 @@
             android:layout_toRightOf="@+id/tv_dialog_note_created_date"
             android:background="#fff"
             android:padding="8dp"
-            android:text="Modified At 30 Desember 2019"
+            android:text="Modified At : --"
             android:textSize="10sp"
             android:textStyle="italic" />
 
@@ -60,7 +60,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
+            android:padding="16dp"
+            android:background="#ffffff"
             android:orientation="horizontal"
             android:layout_below="@id/tv_dialog_note_modified_date">
             <Button

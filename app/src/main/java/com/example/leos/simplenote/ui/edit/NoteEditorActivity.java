@@ -1,6 +1,12 @@
 package com.example.leos.simplenote.ui.edit;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +23,6 @@ import butterknife.ButterKnife;
 public class NoteEditorActivity extends BaseActivity {
 
     public static final String ACTION_NEW = "com.example.leos.simplenote.ui.edit.action_new";
-    public static final String ACTION_VIEW = "com.example.leos.simplenote.ui.edit.action_view";
     public static final String ACTION_EDIT = "com.example.leos.simplenote.ui.edit.action_edit";
 
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -30,10 +35,8 @@ public class NoteEditorActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String actionReceived = getIntent().getAction();
-
         NoteEditorFragment fragment = new NoteEditorFragment();
 
         if (actionReceived.equals(ACTION_NEW)) {
@@ -59,15 +62,45 @@ public class NoteEditorActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
+            showDialogExitConfirmation();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.home){
-            finish();
+        switch (item.getItemId()){
+            case R.id.home :
+                NavUtils.navigateUpFromSameTask(this);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDialogExitConfirmation(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Cancel Confirmation")
+                .setMessage("Are sure want to cancel? The note is not gonna be saved")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

@@ -1,18 +1,16 @@
 package com.example.leos.simplenote.ui.main;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
 
 import com.example.leos.simplenote.R;
 import com.example.leos.simplenote.ui.BaseActivity;
@@ -61,13 +59,14 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-
-
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else {
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
+            showDialogExitConfirmation();
+        } else {
             super.onBackPressed();
         }
     }
@@ -77,9 +76,9 @@ public class MainActivity extends BaseActivity implements
         int id = item.getItemId();
         switch (item.getItemId()){
             case R.id.nav_home :
-                //start main act
+                recreate();
                 break;
-            case R.id.nav_edit :
+            case R.id.nav_bookmark:
                 //start edit act
                 break;
             default:
@@ -87,5 +86,25 @@ public class MainActivity extends BaseActivity implements
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void showDialogExitConfirmation(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Confirmation")
+                .setMessage("Are sure want to exit?")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

@@ -22,6 +22,9 @@ public class NoteViewModelFactory implements ViewModelProvider.Factory {
         else if (modelClass.isAssignableFrom(EditorViewModel.class)){
             return (T) new EditorViewModel(repository);
         }
+        else if (modelClass.isAssignableFrom(DialogNoteViewModel.class)){
+            return (T) new DialogNoteViewModel(repository);
+        }
         else {
             throw new IllegalArgumentException("View Model Not Found");
         }

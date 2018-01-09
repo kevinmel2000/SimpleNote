@@ -10,7 +10,7 @@ import java.util.TimeZone;
  */
 
 public class DateUtils {
-    public static Calendar calendar = Calendar.getInstance();
+    private static Calendar calendar = Calendar.getInstance();
     public static long getCurrentDateTime(){
         calendar.setTimeZone(TimeZone.getDefault());
         return calendar.getTimeInMillis();

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.leos.simplenote.R;
@@ -19,6 +20,7 @@ import com.example.leos.simplenote.model.room.Note;
 import com.example.leos.simplenote.model.room.NoteDao;
 import com.example.leos.simplenote.model.room.NoteDatabase;
 import com.example.leos.simplenote.ui.edit.NoteEditorActivity;
+import com.example.leos.simplenote.utilities.DateUtils;
 import com.example.leos.simplenote.viewmodel.DialogNoteViewModel;
 import com.example.leos.simplenote.viewmodel.NoteViewModelFactory;
 
@@ -30,8 +32,8 @@ public class DialogNoteFragment extends DialogFragment implements View.OnClickLi
     @BindView(R.id.tv_dialog_note_content) TextView tvContent;
     @BindView(R.id.tv_dialog_note_created_date) TextView tvCreatedDate;
     @BindView(R.id.tv_dialog_note_modified_date) TextView tvModifiedDate;
-    @BindView(R.id.btn_dialog_note_edit) TextView btnEdit;
-    @BindView(R.id.btn_dialog_note_delete) TextView btnDelete;
+    @BindView(R.id.btn_dialog_note_edit) Button btnEdit;
+    @BindView(R.id.btn_dialog_note_delete) Button btnDelete;
 
     private DialogNoteViewModel viewModel;
     private Note note;
@@ -56,15 +58,16 @@ public class DialogNoteFragment extends DialogFragment implements View.OnClickLi
         tvTitle.setText(note.getTitle());
         tvContent.setText(note.getContent());
         if (note.getDateCreated() != null){
-            Log.w("NOTE DIALOG", "onCreateView: " + note.getDateCreated());
-            tvCreatedDate.setText(note.getDateCreated().toString());
-
-            if (note.getDateModified() != null){
-                tvModifiedDate.setText(note.getDateModified().toString());
-            }
-            else {
-                tvModifiedDate.setText("--");
-            }
+            tvCreatedDate.setText("Created At : " +
+                    DateUtils.getFormatedDate(note.getDateCreated())
+                    + ", " +
+                    DateUtils.getFormatedTime(note.getDateCreated()));
+        }
+        if (note.getDateModified() != null) {
+            tvModifiedDate.setText("Modified At : " +
+                    DateUtils.getFormatedDate(note.getDateModified())
+                    + ", " +
+                    DateUtils.getFormatedTime(note.getDateModified()));
         }
 
         btnEdit.setOnClickListener(this);
@@ -81,27 +84,27 @@ public class DialogNoteFragment extends DialogFragment implements View.OnClickLi
         NoteRepository repository = new NoteRepository(dao);
         ViewModelProvider.Factory factory = new NoteViewModelFactory(repository);
         viewModel = ViewModelProviders.of(this, factory).get(DialogNoteViewModel.class);
-
     }
 
-    private void startNoteEditorActivity(){
+    private void startNoteEditorActivity() {
         Intent intent = new Intent(getActivity(), NoteEditorActivity.class);
         intent.putExtra("Note", getArguments().getParcelable("Note"));
         intent.setAction(NoteEditorActivity.ACTION_EDIT);
         startActivity(intent);
     }
 
-    private void deleteNote(){
+    private void deleteNote() {
         viewModel.deleteNote(String.valueOf(note.getId()));
+        dismiss();
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_dialog_note_edit :
+        switch (v.getId()) {
+            case R.id.btn_dialog_note_edit:
                 startNoteEditorActivity();
                 break;
-            case R.id.btn_dialog_note_delete :
+            case R.id.btn_dialog_note_delete:
                 deleteNote();
                 break;
         }

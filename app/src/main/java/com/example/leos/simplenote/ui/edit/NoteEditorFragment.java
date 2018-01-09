@@ -26,9 +26,6 @@ import com.example.leos.simplenote.viewmodel.NoteViewModelFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class NoteEditorFragment extends Fragment {
     private static final String NOTE = "note";
 
@@ -54,6 +51,11 @@ public class NoteEditorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_note_editor, container, false);
         ButterKnife.bind(this, view);
 
+        if (getArguments() != null){
+            Note note = getArguments().getParcelable("Note");
+            edtTitle.setText(note.getTitle());
+            edtContent.setText(note.getContent());
+        }
         return view;
     }
 
@@ -105,11 +107,12 @@ public class NoteEditorFragment extends Fragment {
             note.setTitle(getNoteTitle());
             note.setContent(getNoteContent());
 
-            if (getArguments() != null){
+            if (getArguments() == null){
                 note.setDateCreated(DateUtils.getCurrentDateTime());
             }else {
                 note.setDateModified(DateUtils.getCurrentDateTime());
             }
+
             viewModel.insertNote(note);
             getActivity().finish();
         }else {

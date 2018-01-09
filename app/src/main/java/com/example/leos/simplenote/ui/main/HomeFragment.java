@@ -18,15 +18,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.leos.simplenote.R;
-import com.example.leos.simplenote.dependencyinjection.AppComponent;
-import com.example.leos.simplenote.dependencyinjection.ContextModule;
-import com.example.leos.simplenote.dependencyinjection.DaggerAppComponent;
-import com.example.leos.simplenote.dependencyinjection.RoomModule;
 import com.example.leos.simplenote.model.NoteRepository;
+import com.example.leos.simplenote.model.room.Note;
 import com.example.leos.simplenote.model.room.NoteDao;
 import com.example.leos.simplenote.model.room.NoteDatabase;
+import com.example.leos.simplenote.ui.adapter.NoteCardAdapter;
 import com.example.leos.simplenote.ui.adapter.NoteListAdapter;
-import com.example.leos.simplenote.model.room.Note;
 import com.example.leos.simplenote.ui.edit.NoteEditorActivity;
 import com.example.leos.simplenote.utilities.ItemClickSupport;
 import com.example.leos.simplenote.viewmodel.HomeViewModel;
@@ -44,6 +41,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private HomeViewModel viewModel;
     private NoteListAdapter listAdapter;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -67,25 +65,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /*if (viewModel == null){
+        if (viewModel == null){
             NoteDatabase noteDatabase = NoteDatabase.getsInstance(getContext());
             NoteDao noteDao = noteDatabase.noteDao();
             NoteRepository noteRepository = new NoteRepository(noteDao);
             NoteViewModelFactory viewModelFactory = new NoteViewModelFactory(noteRepository);
             viewModel= ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel.class);
 
-        }*/
+        }
 
-
-
-        if (viewModel == null){
+       /* if (viewModel == null){
             AppComponent appComponent = DaggerAppComponent
                     .builder()
                     .contextModule(new ContextModule(getContext()))
                     .build();
             factory = appComponent.geViewModelFactory();
             viewModel= ViewModelProviders.of(this, factory).get(HomeViewModel.class);
-        }
+        }*/
 
         viewModel.getAllNote().observe(this, new Observer<List<Note>>() {
             @Override
@@ -93,7 +89,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 Log.w("MAIN FRAGMENT", "onChanged: " + notes.size() );
                 ArrayList<Note> notesArr = new ArrayList<>();
                 notesArr.addAll(notes);
-                showNoteListInListView(notesArr);
+                showNoteListInCardView(notesArr);
             }
         });
 
@@ -112,8 +108,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         startNoteDetail(listAdapter.getNotes().get(position));
             }
         });
+    }
 
-        //add setOnlongclicklistener
+    private void showNoteListInCardView(ArrayList<Note> notes) {
+        final NoteCardAdapter cardAdapter = new NoteCardAdapter(getActivity());
+
+        rvHomeNoteList.setHasFixedSize(true);
+        rvHomeNoteList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvHomeNoteList.setAdapter(cardAdapter);
+
+        cardAdapter.setNotes(notes);
+
+        ItemClickSupport.addTo(rvHomeNoteList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                startNoteDetail(cardAdapter.getNotes().get(position));
+            }
+        });
     }
 
     @Override
